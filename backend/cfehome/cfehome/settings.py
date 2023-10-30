@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "products",
 ]
 
 MIDDLEWARE = [
@@ -122,3 +125,31 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# auth_classes = [
+#         "rest_framework.authenctication.SessionAuthentication",
+#         "api.authentication.TokenAuthenctication"
+# ]
+
+
+# if DEBUG:
+#     auth_classes = [
+#         "api.authentication.TokenAuthenctication"
+#     ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_RATES':{
+        'anon':'2/min',
+        'user':'5/min',
+    },
+
+    "DEFAULT_AUTHENTICATION_CLASSES":[
+        "rest_framework.authenctication.SessionAuthentication",
+        "api.authentication.TokenAuthenctication"
+        ],
+
+    "DEFAULT_PERMISSION_CLASSES":[
+        "rest_framework."
+        ],
+}

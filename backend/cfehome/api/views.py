@@ -1,23 +1,30 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-import json
+from django.forms.models import model_to_dict
+from products.models import Product
+from products.serializer import ProductSerializer
+from rest_framework.response import Response            
+from rest_framework.decorators import api_view, throttle_classes    
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle  
+                                                                  
+
 
 # Create your views here.
 
+@api_view(["GET", "POST"])
+@throttle_classes([AnonRateThrottle, UserRateThrottle]) 
 def api_home(request, *args, **kwargs):
-    # request is not from python module it is django request
-    # request.body
+    """
+        DRF API VIEW
+    """
+    if request.method == 'GET':
+        model_data = Product.objects.all() 
+        data = ProductSerializer(model_data, many = True).data                                                                                   
+        return Response(data)
     
-    print(request.GET)
-    print(request.POST)
-    body = request.body # byte string of JSON data
-    data = {}
-    try:
-        data = json.loads(body) # string of json data -> Python Dict
-    except:
-        pass
-    # data['headers'] = request.headers # request.META
-    data['params'] = dict(request.GET)
-    data['headers'] = dict(request.headers) # request.META
-    data['content_type'] = request.content_type # request.META
-    return JsonResponse(data)
+    if request.method == 'POST':
+
+        serializer = ProductSerializer(data = request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()            
+            return Response({'msg':'Data Created Succesfully'})
+        return Response(serializer.errors)                                                        
