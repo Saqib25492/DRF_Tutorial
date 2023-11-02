@@ -145,11 +145,11 @@ REST_FRAMEWORK = {
     },
 
     "DEFAULT_AUTHENTICATION_CLASSES":[
-        "rest_framework.authenctication.SessionAuthentication",
-        "api.authentication.TokenAuthenctication"
+        "rest_framework.authentication.SessionAuthentication",
+        "api.authentication.TokenAuthentication"
         ],
 
     "DEFAULT_PERMISSION_CLASSES":[
-        "rest_framework."
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
         ],
 }

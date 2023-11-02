@@ -17,7 +17,7 @@ def api_home(request, *args, **kwargs):
     """
     if request.method == 'GET':
         model_data = Product.objects.all() 
-        data = ProductSerializer(model_data, many = True).data                                                                                   
+        data = ProductSerializer(model_data, many = True, context = {'request':request}).data                                                                                   
         return Response(data)
     
     if request.method == 'POST':
