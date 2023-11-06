@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/v2/', include('cfehome.routers')),
     path('auth', include('rest_framework.urls', namespace='rest_framework')),
     path('gettoken/', obtain_auth_token),
+    path('api/search/', include('search.urls')),
 ]

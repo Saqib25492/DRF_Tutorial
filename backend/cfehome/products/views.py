@@ -4,14 +4,16 @@ from .serializer import ProductSerializer
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from api.mixins import StaffEditorMixin, UserQuerySetMixin
+from products.paginations import MyPaginatin, MyLimitPagination
 
 # Create your views here.
 
-class ProductCreateAPIView(StaffEditorMixin, UserQuerySetMixin, ListCreateAPIView,):
+class ProductCreateAPIView(UserQuerySetMixin, ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly | IsAdminUser]
-    throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    permission_classes = [IsAuthenticatedOrReadOnly | IsAdminUser]
+    # throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    pagination_class = MyLimitPagination
     
     def perform_create(self, serializer):
         # serializer.save(user = self.request.user)
