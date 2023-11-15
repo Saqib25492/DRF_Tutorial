@@ -18,7 +18,7 @@ password = getpass()
  
 headers =  {'Content-Type': 'application/json; charset=utf-8'}
 auth_response = requests.post(endpoint, json={"username":username, "password":password})
-
+    
 if auth_response.status_code == 200:
     token = auth_response.json()['token']
     headers = {

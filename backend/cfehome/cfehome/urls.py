@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path('auth', include('rest_framework.urls', namespace='rest_framework')),
     path('gettoken/', obtain_auth_token),
     path('api/search/', include('search.urls')),
+    
 ]

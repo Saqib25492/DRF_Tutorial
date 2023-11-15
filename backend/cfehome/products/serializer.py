@@ -12,18 +12,20 @@ class ProductSerializer(serializers.ModelSerializer):
         lookup_field = 'pk',
         )
     
-    
+    body = serializers.CharField(source='content')
     # email = serializers.EmailField(write_only = True)
     title = serializers.CharField(validators = [unique_product_title, validata_title_no_hello])
     # name = serializers.CharField(source = 'title', read_only=True)
     class Meta:
         model = Product
-        fields = ['owner',
+        fields = [
+            'owner',
                   'url',
-                  'pk',
+                  'id',
                   'title',
-                  'content',
+                  'body',
                   'price',
+                  'public',
                 ]
     
     # Overriding the create method but this is used when you are add some arbitary field to serializer other wise its not recommended

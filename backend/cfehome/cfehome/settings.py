@@ -37,9 +37,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "api",
+    
+    #third party API services
+    'algoliasearch_django',
+   
+    
+    # Third Party Packages
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt",
+    "corsheaders",
+    
+    
+    # Internal Apss
+    "api",
     "products",
     "search",
 ]
@@ -47,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -55,6 +67,23 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "cfehome.urls"
+CORS_URL_REGEX = r"^/api/.*"
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "http://127.0.0.1:8111",
+        "https://localhost:8111",
+    ]
+    
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
 
 TEMPLATES = [
     {
@@ -140,24 +169,40 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_THROTTLE_RATES':{
-        'anon':'2/min',
-        'user':'5/min',
-    },
+    # 'DEFAULT_THROTTLE_RATES':{
+    #     'anon':'2/min',
+    #     'user':'5/min',
+    # },
 
     "DEFAULT_AUTHENTICATION_CLASSES":[
         "rest_framework.authentication.SessionAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         "api.authentication.TokenAuthentication"
         ],
 
-    "DEFAULT_PERMISSION_CLASSES":[
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
-        ],
+    # "DEFAULT_PERMISSION_CLASSES":[
+    #     "rest_framework.permissions.IsAuthenticated"
+    #     ],
     
-    "DEFAULT_PAGINATION_CLASS":
-        "rest_framework.pagination.LimitOffsetPagination",
+    # "DEFAULT_PAGINATION_CLASS":
+    #     "rest_framework.pagination.LimitOffsetPagination",
     
-    "PAGE_SIZE":3,
-    "DEFAULT_LIMIT":3,
-    "MAX_LIMIT":4,
+    # "PAGE_SIZE":3,
+    # "DEFAULT_LIMIT":3,
+    # "MAX_LIMIT":6,
+}
+
+
+ALGOLIA = {
+    'APPLICATION_ID': 'H7JCW6NVUB',
+    'API_KEY': '10a3733cc031c1fd588c1358829c7121',
+    'INDEX_PREFIX': 'soomros'
+}
+
+import datetime
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES":["Bearer"],
+    "ACCESS_TOKEN_LIFETIME":datetime.timedelta(seconds=30),
+    "REFRESH_TOKEN_LIFETIME":datetime.timedelta(minutes=1)
 }

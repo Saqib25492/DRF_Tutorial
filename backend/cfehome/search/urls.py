@@ -3,5 +3,6 @@ from search import views
 
 
 urlpatterns = [
-    path('', views.SeacrhListView.as_view(), name='search')
+    path('', views.SearchListView.as_view(), name='search'),
+    path('searchold/', views.SeacrholdListView.as_view(), name='searchold')
 ]
