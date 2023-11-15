@@ -1,11 +1,15 @@
 const LoginForm = document.getElementById("login-form")
 const content =  document.getElementById("content-container")
-
+const SearchForm = document.getElementById("search-form")
 const baseEndpoint = "http://127.0.0.1:8000/api"
 
 
 if (LoginForm){
   LoginForm.addEventListener('submit', handlelogin)
+}
+
+if (SearchForm){
+  SearchForm.addEventListener('submit', handlesearch)
 }
 
 function handlelogin(event) {
@@ -106,4 +110,48 @@ function getProductList(){
 }
 
 
-ValidateJWTToken()
+function handlesearch(event) {
+  event.preventDefault()
+  let SearchFormData = new FormData(SearchForm)
+  let SearchObjectsData = Object.fromEntries(SearchFormData)
+  let searchParams = new URLSearchParams(SearchObjectsData)
+  const SearchEndpoint = `${baseEndpoint}/search/?${searchParams}`
+  const headers = {
+    "Content-Type": "application/json",
+  }
+  const AuthToken = localStorage.getItem('access') 
+  if (AuthToken){
+    headers['Authorization'] = `Bearer ${AuthToken}`
+  }
+  const options = {
+    method:"GET",
+    headers: headers
+  }
+  fetch(SearchEndpoint, options) 
+  .then(response=>{
+    return response.json()
+  })
+  .then(data => {
+    const validData = isTokenNotValid(data)
+    if (validData && content){
+      if (data && data.hits){
+        let htmlstr = ""
+        for (let result of data.hits){
+          htmlstr += `<li>${result.title}</li>`
+        }
+        content.innerHTML = htmlstr
+        
+        if (data.hits.length === 0){
+          content.innerHTML = "<p>No Result Found</p>"
+        }
+      } else {
+        content.innerHTML = "<p>No Result Found</p>"
+      }
+
+    } 
+  })
+}
+
+
+
+// ValidateJWTToken()
